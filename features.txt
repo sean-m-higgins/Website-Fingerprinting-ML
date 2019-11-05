@@ -1,0 +1,7 @@
+Our data has the following features...
+    - Website name
+    - timestamp (seconds since January 1st 1970)
+    - Packetsize (positive[from] or negative[to])
+
+It is our choice to chose what features we want to work with
+So be sure to comment if you have any ideas
