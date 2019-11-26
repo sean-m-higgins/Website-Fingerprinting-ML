@@ -13,6 +13,9 @@ for file in file_list:
         a = re.split(" ", str(row))
         if len(a) < 1: # Does not count blank lines at end of the file
 	        continue
-		count_row += 1
+        count_row += 1
         for i in range(0, 1100):
-            a[i]
+            x[count_row, i] = a[i+1]
+    print(file)
+    
+print(x)
