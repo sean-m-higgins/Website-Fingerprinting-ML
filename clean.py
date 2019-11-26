@@ -12,3 +12,13 @@ file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 # For the numpy array, we might need to make it multi-dimensional
 # We need to decide if we want to have an entire array for all websites or 
 # to create on array per site and remove it after to save on storage
+
+all_files = []
+for file in file_list:
+	new_file = []
+	next_file = open(file, "r")
+	for row in new_file.readlines():
+		new_file.append(re.split(" ", str(row)))
+	next_file.close()
+	all_files.append(new_file)
+
