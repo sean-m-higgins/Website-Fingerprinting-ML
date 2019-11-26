@@ -5,8 +5,8 @@ from pathlib import Path
 rootdir = Path('data/10s_website1/')
 file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
-for f in file_list:
-    print(f)
+#for f in file_list:
+#    print(f)
 
 
 # For the numpy array, we might need to make it multi-dimensional
