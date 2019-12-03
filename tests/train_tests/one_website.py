@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 import math
+import random
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
@@ -58,8 +59,37 @@ def not_website(input, l, n, diff):
     return arr_packet, arr_magnitude
 
 
+# Now I need to create my x and y variables to run a successful KNN test
+# Also I need to think through this a lot since we want it to guess the time the second website starts
+# I think we should create a generic test now, and create binary classifier
+# Basically following same procedure above except the row is now generic amongst all files
+# But some lines need to contain lines from given website
+
+def create_train_test(web, l, n, diff):
+    # Copy paste as above basically except make it a random row in a random website
+    train_packet = np.zeros(shape = (l, n))
+    train_magnitude = np.zeros(shape = (l, n))
+    test_packet = np.zeros(shape = (l, n))
+    test_magnitude = np.zeros(shape = (l, n))
+
+    rootdir = Path('data/result/') 
+    file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
+    
+    
+
+
+    return train_packet, test_packet, train_magnitude, test_magnitude
+
+
+''' 
+Plan
+    Concatenate the non_website with website and see if it can tell if it is facebook or not
+'''
+
+
 website = "data/result/facebook.com"
 
-p, m = not_website(website, 30, 200, 0.1)
+# p, m = not_website(website, 30, 200, 0.1)
+train_p, test_p, train_m, test_m = create_train_test(website, 30, 200, 0.1)
 # print(p)
 # print(m)
