@@ -42,6 +42,7 @@ def not_website(input, l, n, diff):
                 arr_magnitude[counter, count_seconds] = 0
                 gap-=1
                 count_seconds+=1
+                prev_time += diff
                 if count_seconds >= n:
                     break
             if count_seconds >= n:
@@ -58,10 +59,8 @@ def not_website(input, l, n, diff):
                 break
             count += 1
         counter += 1
-    return arr_packet, arr_magnitude
+    # return arr_packet, arr_magnitude
 
-
-def create_train_test(web, l, n, diff):
     train_packet = np.zeros(shape = (l, n))
     train_magnitude = np.zeros(shape = (l, n))
     
@@ -80,8 +79,6 @@ def create_train_test(web, l, n, diff):
         for row in view_file.readlines():
             con+=1
         random_row = randrange(con)
-        # print(view_file)
-        # Now I need to iterate through this row and create a row in the numpy array
         line = ""
         cont = 0
         view_file = open(fil, "r")
@@ -116,6 +113,7 @@ def create_train_test(web, l, n, diff):
                 train_magnitude[i, count_seconds] = 0
                 gap-=1
                 count_seconds+=1
+                prev_time += diff
                 if count_seconds >= n:
                     break
             if count_seconds >= n:
@@ -131,35 +129,41 @@ def create_train_test(web, l, n, diff):
             if count_seconds >= n:
                 break
             count += 1
-    return train_packet, train_magnitude
+    # return train_packet, train_magnitude
+
+    y = np.zeros(shape=(60, 1))
+    for i in range(60):
+        if i < 30:
+            y[i, 0] = 1
+        elif i>=30 and i<60:
+            y[i, 0] = 0
+
+    x_p = np.concatenate((arr_packet, train_packet), axis=0)
+    x_m = np.concatenate((arr_magnitude, train_magnitude), axis=0)
+    ds_packet = np.concatenate((y, x_p), axis=1)
+    ds_magnitude = np.concatenate((y, x_m), axis=1)
+
+    return ds_packet, ds_magnitude
 
 
 website = "data/result/facebook.com"
 
-p, m = not_website(website, 30, 200, 0.1)
-train_p, train_m = create_train_test(website, 30, 200, 0.1)
-# print(train_p)
-# print(p)
+ds_packet, ds_magnitude = not_website(website, 30, 200, 0.1)
 
-y = np.zeros(shape=(60, 1))
-for i in range(60):
-    if i < 30:
-        y[i, 0] = 1
-    elif i>=30 and i<60:
-        y[i, 0] = 0
-# print(y)
+# Data is split 80 / 20
+split_horizontally_idx = int(ds_packet.shape[0]* 0.8)
+train_packet = ds_packet[:split_horizontally_idx , :]
+test_packet = ds_packet[split_horizontally_idx: , :]
 
-x_p = np.concatenate((p, train_p), axis=0)
-x_m = np.concatenate((m, train_m), axis=0)
-ds_packet = np.concatenate((y, x_p), axis=1)
-ds_magnitude = np.concatenate((y, x_m), axis=1)
-# print(ds_packet)
-# print(ds_magnitude)
+split_horizontally_idx = int(ds_magnitude.shape[0]* 0.8)
+train_magnitude = ds_magnitude[:split_horizontally_idx , :]
+test_magnitude = ds_magnitude[split_horizontally_idx: , :]
 
-''' 
-    Need to then split the test and train into 30-70 and then we are free to do testing
 
-    I will combine the two functions for simplification once completed
+'''
+    Now use this data for data learning
+    train_packet and test_packet for actual packet size
+    train_magnitude and test_magnitude for 1, 0, or -1
 '''
 
 
