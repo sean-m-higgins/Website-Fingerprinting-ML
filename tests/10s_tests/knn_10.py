@@ -13,6 +13,9 @@ file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 count_row = 0
 counter = 0
 website_index = 0
+
+max_time_diff = 0
+prev_time = 0
 for file in file_list:
     next_file = open(file, "r")
     counter+=1
@@ -25,12 +28,18 @@ for file in file_list:
         for i in range(0, 1100):
             x[count_row, i, 0] = website_index
             b = re.split(":", str(a[i+2]))
+            if i == 0:
+                max_time_diff = 0
+                prev_time = float(b[0])
             x[count_row, i, 1] = float(b[0]) - time_start
+            if max_time_diff < float(b[0]) - prev_time:
+                max_time_diff = float(b[0]) - prev_time
             if float(b[1]) > 0:
                 x[count_row, i, 2] = 1 # positive packetsize
             else:
                 x[count_row, i, 2] = 0 # negative packetsize
             x[count_row, i, 3] = float(b[1])
+            prev_time = float(b[0])
         count_row += 1
         if count_row >= 15000:
             break
@@ -41,8 +50,9 @@ for file in file_list:
             website_num     time_from_start     pos_neg     actual_packetsize
                 0                   1              2               3
     '''
-    
+
 print(x)
+print(max_time_diff)
 
 
 '''
