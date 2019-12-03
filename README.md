@@ -2,6 +2,13 @@
 Machine Learning implementation of website fingerprinting
 
 
+## Presentation
+Here is the link to the Google Slides presentation taht we should work on: 
+https://docs.google.com/presentation/d/1yGbqBSM7N9cy_UUAFvOsbbCi7Jp4Wk4sngm8Xq8vJkE/edit?usp=sharing
+
+If you want access to edit, request it. Otherwise email me the email you want share access on.
+
+
 ## Setting up datasets
 Clone this repository as is, but download the datasets yourself and drag into data folder
 
