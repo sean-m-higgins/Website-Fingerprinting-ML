@@ -52,31 +52,28 @@ def not_website(input, l, n, diff):
                 arr_magnitude[counter, count_seconds] = 1
             elif packet < 0:
                 arr_magnitude[counter, count_seconds] = -1
-            prev_time = time
+            prev_time += diff
             count_seconds +=1
+            if count_seconds >= n:
+                break
             count += 1
         counter += 1
     return arr_packet, arr_magnitude
 
 
-# Now I need to create my x and y variables to run a successful KNN test
-# Also I need to think through this a lot since we want it to guess the time the second website starts
-# I think we should create a generic test now, and create binary classifier
-# Basically following same procedure above except the row is now generic amongst all files
-# But some lines need to contain lines from given website
-
 def create_train_test(web, l, n, diff):
-    # Copy paste as above basically except make it a random row in a random website
     train_packet = np.zeros(shape = (l, n))
     train_magnitude = np.zeros(shape = (l, n))
-    # test_packet = np.zeros(shape = (l, n))
-    # test_magnitude = np.zeros(shape = (l, n))
-
+    
     rootdir = Path('data/result/') 
     file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
+
+    for i in range(67):
+        if file_list[i] == website:
+            file_list.remove(i)
     
     for i in range(l):
-        random_site = randrange(67)
+        random_site = randrange(66)
         con = 0
         fil = file_list[random_site - 1]
         view_file = open(fil, "r")
@@ -96,7 +93,7 @@ def create_train_test(web, l, n, diff):
             cont+=1
         split = re.split(" ", str(line))
         if len(split) < 2:
-            continue
+            break
         origin = re.split(":", str(split[2]))
         start_time = float(origin[0])
         ten_sec_reached = True
@@ -129,22 +126,40 @@ def create_train_test(web, l, n, diff):
                 train_magnitude[i, count_seconds] = 1
             elif packet < 0:
                 train_magnitude[i, count_seconds] = -1
-            prev_time = time
+            prev_time += diff
             count_seconds +=1
+            if count_seconds >= n:
+                break
             count += 1
     return train_packet, train_magnitude
-
-
-''' 
-Plan
-    Concatenate the non_website with website and see if it can tell if it is facebook or not
-'''
 
 
 website = "data/result/facebook.com"
 
 p, m = not_website(website, 30, 200, 0.1)
-train_p, train_m = create_train_test(website, 30, 200, 0.01)
-print(train_p[0])
-print(p)
-# print(m)
+train_p, train_m = create_train_test(website, 30, 200, 0.1)
+# print(train_p)
+# print(p)
+
+y = np.zeros(shape=(60, 1))
+for i in range(60):
+    if i < 30:
+        y[i, 0] = 1
+    elif i>=30 and i<60:
+        y[i, 0] = 0
+# print(y)
+
+x_p = np.concatenate((p, train_p), axis=0)
+x_m = np.concatenate((m, train_m), axis=0)
+ds_packet = np.concatenate((y, x_p), axis=1)
+ds_magnitude = np.concatenate((y, x_m), axis=1)
+# print(ds_packet)
+# print(ds_magnitude)
+
+''' 
+    Need to then split the test and train into 30-70 and then we are free to do testing
+
+    I will combine the two functions for simplification once completed
+'''
+
+
