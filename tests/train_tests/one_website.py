@@ -154,6 +154,9 @@ x_packet, x_magnitude, y_vals = not_website(website, 30, 200, 0.1)
 X_p_train, X_p_test, y_p_train, y_p_test = train_test_split(x_packet, y_vals, test_size=0.2, random_state=0)
 X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals, test_size=0.2, random_state=0)
 
+X_p_dev, X_p_test, y_p_dev, y_p_test = train_test_split(X_m_test, y_m_test, test_size=0.5, random_state=0)
+X_m_dev, X_m_test, y_m_dev, y_m_test = train_test_split(X_p_test, y_p_test, test_size=0.5, random_state=0)
+
 
 
 # Data is split 80 / 20
