@@ -5,6 +5,7 @@ from random import randrange
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
@@ -140,17 +141,23 @@ def not_website(input, l, n, diff):
 
     x_p = np.concatenate((arr_packet, train_packet), axis=0)
     x_m = np.concatenate((arr_magnitude, train_magnitude), axis=0)
-    ds_packet = np.concatenate((y, x_p), axis=1)
-    ds_magnitude = np.concatenate((y, x_m), axis=1)
+    # ds_packet = np.concatenate((y, x_p), axis=1)
+    # ds_magnitude = np.concatenate((y, x_m), axis=1)
 
-    return ds_packet, ds_magnitude
+    return x_p, x_m, y
 
 
 website = "data/result/facebook.com"
 
-ds_packet, ds_magnitude = not_website(website, 30, 200, 0.1)
+x_packet, x_magnitude, y_vals = not_website(website, 30, 200, 0.1)
+
+X_p_train, X_p_test, y_p_train, y_p_test = train_test_split(x_packet, y_vals, test_size=0.2, random_state=0)
+X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals, test_size=0.2, random_state=0)
+
+
 
 # Data is split 80 / 20
+'''
 split_horizontally_idx = int(ds_packet.shape[0]* 0.8)
 train_packet = ds_packet[:split_horizontally_idx , :]
 test_packet = ds_packet[split_horizontally_idx: , :]
@@ -158,7 +165,7 @@ test_packet = ds_packet[split_horizontally_idx: , :]
 split_horizontally_idx = int(ds_magnitude.shape[0]* 0.8)
 train_magnitude = ds_magnitude[:split_horizontally_idx , :]
 test_magnitude = ds_magnitude[split_horizontally_idx: , :]
-
+'''
 
 '''
     Now use this data for data learning
