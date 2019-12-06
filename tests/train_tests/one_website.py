@@ -156,6 +156,9 @@ website = "data/result/facebook.com"
 
 x_packet, x_magnitude, y_vals = not_website(website, 50, 200, 0.1)
 
+print(x_packet)
+print(x_magnitude)
+
 # Standardize the features
 sc = StandardScaler()
 sc.fit(x_packet)
@@ -166,8 +169,8 @@ sc1.fit(x_magnitude)
 X_p_train, X_p_test, y_p_train, y_p_test = train_test_split(x_packet, y_vals, test_size=0.2, random_state=0)
 X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals, test_size=0.2, random_state=0)
 
-X_p_dev, X_p_test, y_p_dev, y_p_test = train_test_split(X_m_test, y_m_test, test_size=0.5, random_state=0)
-X_m_dev, X_m_test, y_m_dev, y_m_test = train_test_split(X_p_test, y_p_test, test_size=0.5, random_state=0)
+X_p_dev, X_p_test, y_p_dev, y_p_test = train_test_split(X_p_test, y_p_test, test_size=0.5, random_state=0)
+X_m_dev, X_m_test, y_m_dev, y_m_test = train_test_split(X_m_test, y_m_test, test_size=0.5, random_state=0)
 
 y_m_train_raveled = y_m_train.ravel()
 y_p_train_raveled = y_p_train.ravel()
@@ -221,22 +224,22 @@ print("")
 # Should try perceptron
 
 # Perceptron on packet_size - dev
-perc1 = Perceptron(eta=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc1 = Perceptron(random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
 print("Accuracy of perceptron on packet size - dev: ", p_dev_eva, "%")
 
 # Perceptron on packet_size - test
-perc2 = Perceptron(eta=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc2 = Perceptron(random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_test_eva = accuracy_score(y_p_test, perc2.predict(X_p_test)) * 100
 print("Accuracy of perceptron on packet size - test: ", p_test_eva, "%")
 
 # Perceptron on magnitude - dev
-perc3 = Perceptron(eta=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
+perc3 = Perceptron(random_state = 0).fit(X_m_train, y_m_train_raveled)
 m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
 print("Accuracy of perceptron on magnitude - dev: ", m_dev_eva, "%")
 
 # Perceptron on magnitude - test
-perc4 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
+perc4 = Perceptron(random_state = 0).fit(X_m_train, y_m_train_raveled)
 m_test_eva = accuracy_score(y_m_test, perc4.predict(X_m_test)) * 100
 print("Accuracy of perceptron on magnitude - test: ", m_test_eva, "%")
 
