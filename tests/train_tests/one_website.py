@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
@@ -149,7 +152,14 @@ def not_website(input, l, n, diff):
 
 website = "data/result/facebook.com"
 
-x_packet, x_magnitude, y_vals = not_website(website, 30, 200, 0.1)
+x_packet, x_magnitude, y_vals = not_website(website, 30, 200, 0.2)
+
+# Standardize the features
+sc = StandardScaler()
+sc.fit(x_packet)
+
+sc1 = StandardScaler()
+sc1.fit(x_magnitude)
 
 X_p_train, X_p_test, y_p_train, y_p_test = train_test_split(x_packet, y_vals, test_size=0.2, random_state=0)
 X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals, test_size=0.2, random_state=0)
@@ -157,6 +167,28 @@ X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals,
 X_p_dev, X_p_test, y_p_dev, y_p_test = train_test_split(X_m_test, y_m_test, test_size=0.5, random_state=0)
 X_m_dev, X_m_test, y_m_dev, y_m_test = train_test_split(X_p_test, y_p_test, test_size=0.5, random_state=0)
 
+y_m_train_raveled = y_m_train.ravel()
+y_p_train_raveled = y_p_train.ravel()
+
+#Logistic Regression on packet size - dev
+clf = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train_raveled)
+p_dev_eval = accuracy_score(y_p_dev, clf.predict(X_p_dev)) * 100
+print("Accuracy of log reg on packet size - dev: ", p_dev_eval, "%")
+
+#Logistic Regression on packet size - test
+clf1 = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train_raveled)
+p_test_eval = accuracy_score(y_p_test, clf1.predict(X_p_test)) * 100
+print("Accuracy of log reg on packet size - test: ", p_test_eval, "%")
+
+#Logistic Regression on magnitude - dev
+clf2 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train_raveled)
+m_dev_eval = accuracy_score(y_m_dev, clf2.predict(X_m_dev)) * 100
+print("Accuracy of log reg on magnitude - dev: ", m_dev_eval, "%")
+
+#Logistic Regression on magnitude - test
+clf3 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train_raveled)
+m_dev_test = accuracy_score(y_m_test, clf3.predict(X_m_test)) * 100
+print("Accuracy of log reg on magnitude - test: ", m_dev_test, "%")
 
 
 # Data is split 80 / 20
