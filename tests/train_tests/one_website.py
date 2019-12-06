@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import Perceptron
+from sklearn.svm import SVC
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
@@ -222,19 +223,44 @@ print("")
 # Perceptron on packet_size - dev
 perc1 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
-print("Accuracy of perceptron on packet size - dev", p_dev_eva, "%")
+print("Accuracy of perceptron on packet size - dev: ", p_dev_eva, "%")
 
 # Perceptron on packet_size - test
 perc2 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_test_eva = accuracy_score(y_p_test, perc2.predict(X_p_test)) * 100
-print("Accuracy of perceptron on packet size - test", p_test_eva, "%")
+print("Accuracy of perceptron on packet size - test: ", p_test_eva, "%")
 
 # Perceptron on magnitude - dev
 perc3 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
 m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
-print("Accuracy of perceptron on magnitude - dev", m_dev_eva, "%")
+print("Accuracy of perceptron on magnitude - dev: ", m_dev_eva, "%")
 
 # Perceptron on magnitude - test
 perc4 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
 m_test_eva = accuracy_score(y_m_test, perc4.predict(X_m_test)) * 100
-print("Accuracy of perceptron on magnitude - test", m_test_eva, "%")
+print("Accuracy of perceptron on magnitude - test: ", m_test_eva, "%")
+
+print("")
+
+# Try SVM
+
+# SVM on packet_size - dev
+svm1 = SVC(gamma='auto').fit(X_p_train, y_p_train_raveled)
+p_dev_e = accuracy_score(y_p_dev, svm1.predict(X_p_dev)) * 100
+print("Accuracy of SVM on packet size - dev: ", p_dev_e, "%")
+
+# SVM on packet_size - test
+svm2 = SVC(gamma='auto').fit(X_p_train, y_p_train_raveled)
+p_test_e = accuracy_score(y_p_test, svm2.predict(X_p_test)) * 100
+print("Accuracy of SVM on packet size - test: ", p_test_e, "%")
+
+# SVM on magnitude - dev
+svm3 = SVC(gamma='auto').fit(X_m_train, y_m_train_raveled)
+m_dev_e = accuracy_score(y_m_dev, svm3.predict(X_m_dev)) * 100
+print("Accuracy of SVM on magnitude - dev: ", m_dev_e, "%")
+
+# SVM on magnitude - test
+svm4 = SVC(gamma='auto').fit(X_m_train, y_m_train_raveled)
+m_test_e = accuracy_score(y_m_test, svm4.predict(X_m_test)) * 100
+print("Accuracy of SVM on magnitude - test: ", m_test_e, "%")
+
