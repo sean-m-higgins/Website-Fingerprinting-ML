@@ -11,6 +11,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import Perceptron
 from sklearn.svm import SVC
+import time
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
@@ -195,7 +196,7 @@ y_p_train_raveled = y_p_train.ravel()
 # GRID SEARCH Logistic Regression:
 
 grid_C = [0.01, 1.0, 10, 100]
-grid_penalty = [['l1', 'l2']
+grid_penalty = [['l1', 'l2']]
 
 top_p_accuracy = 0
 top_p_C = 0.0
@@ -258,7 +259,7 @@ print('Top Model Accuracy m: ' + str(top_m_accuracy) + ' neighbors: ' + str(top_
 #-----------------------------------------------------------------------
 # GRID SEARCH PERCEPTRON:
 
-grid_penalty = [['l1', 'l2']
+grid_penalty = [['l1', 'l2']]
 
 top_p_accuracy = 0
 top_p_penalty = []
