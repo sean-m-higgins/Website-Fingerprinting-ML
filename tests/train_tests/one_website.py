@@ -221,17 +221,17 @@ print("")
 # Should try perceptron
 
 # Perceptron on packet_size - dev
-perc1 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc1 = Perceptron(eta=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
 print("Accuracy of perceptron on packet size - dev: ", p_dev_eva, "%")
 
 # Perceptron on packet_size - test
-perc2 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc2 = Perceptron(eta=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
 p_test_eva = accuracy_score(y_p_test, perc2.predict(X_p_test)) * 100
 print("Accuracy of perceptron on packet size - test: ", p_test_eva, "%")
 
 # Perceptron on magnitude - dev
-perc3 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
+perc3 = Perceptron(eta=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
 m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
 print("Accuracy of perceptron on magnitude - dev: ", m_dev_eva, "%")
 
