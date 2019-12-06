@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
+from sklearn.linear_model import Perceptron
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
@@ -135,11 +136,11 @@ def not_website(input, l, n, diff):
             count += 1
     # return train_packet, train_magnitude
 
-    y = np.zeros(shape=(60, 1))
-    for i in range(60):
-        if i < 30:
+    y = np.zeros(shape=((l*2), 1))
+    for i in range((l*2)):
+        if i < l:
             y[i, 0] = 1
-        elif i>=30 and i<60:
+        elif i>=l and i<(l*2):
             y[i, 0] = 0
 
     x_p = np.concatenate((arr_packet, train_packet), axis=0)
@@ -152,7 +153,7 @@ def not_website(input, l, n, diff):
 
 website = "data/result/facebook.com"
 
-x_packet, x_magnitude, y_vals = not_website(website, 30, 200, 0.2)
+x_packet, x_magnitude, y_vals = not_website(website, 50, 200, 0.1)
 
 # Standardize the features
 sc = StandardScaler()
@@ -190,22 +191,50 @@ clf3 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m
 m_dev_test = accuracy_score(y_m_test, clf3.predict(X_m_test)) * 100
 print("Accuracy of log reg on magnitude - test: ", m_dev_test, "%")
 
+print("")
 
-# Data is split 80 / 20
-'''
-split_horizontally_idx = int(ds_packet.shape[0]* 0.8)
-train_packet = ds_packet[:split_horizontally_idx , :]
-test_packet = ds_packet[split_horizontally_idx: , :]
+# Now we should do a KNN test, TODO check over if possible
 
-split_horizontally_idx = int(ds_magnitude.shape[0]* 0.8)
-train_magnitude = ds_magnitude[:split_horizontally_idx , :]
-test_magnitude = ds_magnitude[split_horizontally_idx: , :]
-'''
+# KNN of 5 on packet_size - dev
+neigh1 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train_raveled)
+p_dev_ev = accuracy_score(y_p_dev, neigh1.predict(X_p_dev)) * 100
+print("Accuracy of k nearest neighbors on packet size - dev: ", p_dev_ev, "%")
 
-'''
-    Now use this data for data learning
-    train_packet and test_packet for actual packet size
-    train_magnitude and test_magnitude for 1, 0, or -1
-'''
+# KNN of 5 on packet_size - test
+neigh2 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train_raveled)
+p_test_ev = accuracy_score(y_p_test, neigh2.predict(X_p_test)) * 100
+print("Accuracy of k nearest neighbors on packet size - test: ", p_test_ev, "%")
 
+# KNN of 5 on magnitude - dev
+neigh3 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train_raveled)
+m_dev_ev = accuracy_score(y_m_dev, neigh3.predict(X_m_dev)) * 100
+print("Accuracy of k nearest neighbors on magnitude - dev: ", m_dev_ev, "%")
 
+# KNN of 5 on magnitude - test
+neigh4 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train_raveled)
+m_test_ev = accuracy_score(y_m_test, neigh4.predict(X_m_test)) * 100
+print("Accuracy of k nearest neighbors on magnitude - test: ", m_test_ev, "%")
+
+print("")
+
+# Should try perceptron
+
+# Perceptron on packet_size - dev
+perc1 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
+print("Accuracy of perceptron on packet size - dev", p_dev_eva, "%")
+
+# Perceptron on packet_size - test
+perc2 = Perceptron(tol=0.001, random_state = 0).fit(X_p_train, y_p_train_raveled)
+p_test_eva = accuracy_score(y_p_test, perc2.predict(X_p_test)) * 100
+print("Accuracy of perceptron on packet size - test", p_test_eva, "%")
+
+# Perceptron on magnitude - dev
+perc3 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
+m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
+print("Accuracy of perceptron on magnitude - dev", m_dev_eva, "%")
+
+# Perceptron on magnitude - test
+perc4 = Perceptron(tol=0.001, random_state = 0).fit(X_m_train, y_m_train_raveled)
+m_test_eva = accuracy_score(y_m_test, perc4.predict(X_m_test)) * 100
+print("Accuracy of perceptron on magnitude - test", m_test_eva, "%")
