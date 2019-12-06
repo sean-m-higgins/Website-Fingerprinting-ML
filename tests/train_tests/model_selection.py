@@ -194,9 +194,10 @@ y_p_train_raveled = y_p_train.ravel()
 
 #-----------------------------------------------------------------------
 # GRID SEARCH Logistic Regression:
+start = time.time()
 
 grid_C = [0.01, 1.0, 10, 100]
-grid_penalty = [['l1', 'l2']]
+grid_penalty = ['l1', 'l2']
 
 top_p_accuracy = 0
 top_p_C = 0.0
@@ -227,8 +228,12 @@ for penalty in grid_penalty:
 print('Top Model Accuracy p: ' + str(top_p_accuracy) + ' C: ' + str(top_p_C) + ' penalty: ' + str(top_p_penalty))
 print('Top Model Accuracy m: ' + str(top_m_accuracy) + ' C: ' + str(top_m_C) + ' penalty: ' + str(top_m_penalty))
 
+end = time.time()
+print(end - start)
+
 #-----------------------------------------------------------------------
 # GRID SEARCH KNN:
+start = time.time()
 
 grid_neighbors = [3, 5, 7, 21]
 
@@ -256,10 +261,14 @@ for neighbor in grid_neighbors:
 print('Top Model Accuracy p: ' + str(top_p_accuracy) + ' neighbors: ' + str(top_p_neighbor))
 print('Top Model Accuracy m: ' + str(top_m_accuracy) + ' neighbors: ' + str(top_m_neighbor))
 
+end = time.time()
+print(end - start)
+
 #-----------------------------------------------------------------------
 # GRID SEARCH PERCEPTRON:
+start = time.time()
 
-grid_penalty = [['l1', 'l2']]
+grid_penalty = ['l1', 'l2']
 
 top_p_accuracy = 0
 top_p_penalty = []
@@ -285,8 +294,12 @@ for penalty in grid_penalty:
 print('Top Model Accuracy p: ' + str(top_p_accuracy) + ' C: ' + str(top_p_penalty))
 print('Top Model Accuracy m: ' + str(top_m_accuracy) + ' C: ' + str(top_m_penalty))
 
+end = time.time()
+print(end - start)
+
 #-----------------------------------------------------------------------
 # GRID SEARCH SVM:
+start = time.time()
 
 grid_C = [0.01, 1.0, 10, 100]
 
@@ -314,18 +327,21 @@ for C in grid_C:
 print('Top Model Accuracy p: ' + str(top_p_accuracy) + ' C: ' + str(top_p_C))
 print('Top Model Accuracy m: ' + str(top_m_accuracy) + ' C: ' + str(top_m_C))
 
+end = time.time()
+print(end - start)
+
 #-----------------------------------------------------------------------
 # N-FOLD CROSS VALIDATION:
 
-n = 3
-acc_scores = []
+# n = 3
+# acc_scores = []
 
-for i in range(n):
-	X_train_val, X_test_val, y_train_val, y_test_val = split(X_p_train, y_p_train_raveled, i+1, n)
-	svc = svm.SVC(kernel='linear', C=1.0).fit(X_train_val, y_train_val)
-	predictions = svc.predict(X_test_val)
-	cur_accuracy_score = accuracy_score(y_test_val, predictions)
-	print("Accuracy Score " + str(i) + ": " + str(cur_accuracy_score))
-	acc_scores.append(cur_accuracy_score)
+# for i in range(n):
+# 	X_train_val, X_test_val, y_train_val, y_test_val = split(X_p_train, y_p_train_raveled, i+1, n)
+# 	svc = svm.SVC(kernel='linear', C=1.0).fit(X_train_val, y_train_val)
+# 	predictions = svc.predict(X_test_val)
+# 	cur_accuracy_score = accuracy_score(y_test_val, predictions)
+# 	print("Accuracy Score " + str(i) + ": " + str(cur_accuracy_score))
+# 	acc_scores.append(cur_accuracy_score)
 
-print('N-Fold Cross Validation Average Accuracy Score: ' + str(sum(acc_scores)/len(acc_scores)))
+# print('N-Fold Cross Validation Average Accuracy Score: ' + str(sum(acc_scores)/len(acc_scores)))
