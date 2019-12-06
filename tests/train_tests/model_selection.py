@@ -172,6 +172,8 @@ def split(train, y, i, n):
 	return X_train, X_test, y_train, y_test
 
 
+start_start = time.time()
+
 website = "data/result/facebook.com"
 
 x_packet, x_magnitude, y_vals = not_website(website, 50, 200, 0.1)
@@ -212,7 +214,7 @@ for penalty in grid_penalty:
 		clf = LogisticRegression(random_state=0, solver='liblinear', penalty=penalty, C=C).fit(X_p_train, y_p_train_raveled)
 		p_dev_eval = accuracy_score(y_p_dev, clf.predict(X_p_dev)) * 100
 		print("Accuracy of log reg on packet size - dev: ", p_dev_eval, "%")
-		if p_dev_eval > top_accuracy:
+		if p_dev_eval > top_p_accuracy:
 			top_p_accuracy = p_dev_eval
 			top_p_C = C
 			top_p_penalty = penalty
@@ -220,7 +222,7 @@ for penalty in grid_penalty:
 		clf2 = LogisticRegression(random_state=0, solver='liblinear', penalty=penalty, C=C).fit(X_m_train, y_m_train_raveled)
 		m_dev_eval = accuracy_score(y_m_dev, clf2.predict(X_m_dev)) * 100
 		print("Accuracy of log reg on magnitude - dev: ", m_dev_eval, "%")
-		if m_dev_eval > top_accuracy:
+		if m_dev_eval > top_m_accuracy:
 			top_m_accuracy = m_dev_eval
 			top_m_C = C
 			top_m_penalty = penalty
@@ -247,14 +249,14 @@ for neighbor in grid_neighbors:
 	neigh1 = KNeighborsClassifier(n_neighbors=neighbor).fit(X_p_train, y_p_train_raveled)
 	p_dev_ev = accuracy_score(y_p_dev, neigh1.predict(X_p_dev)) * 100
 	print("Accuracy of k nearest neighbors on packet size - dev: ", p_dev_ev, "%")
-	if p_dev_ev > top_accuracy:
+	if p_dev_ev > top_p_accuracy:
 		top_p_accuracy = p_dev_ev
 		top_p_neighbor = neighbor
 	# KNN of 5 on magnitude - dev
 	neigh3 = KNeighborsClassifier(n_neighbors=neighbor).fit(X_m_train, y_m_train_raveled)
 	m_dev_ev = accuracy_score(y_m_dev, neigh3.predict(X_m_dev)) * 100
 	print("Accuracy of k nearest neighbors on magnitude - dev: ", m_dev_ev, "%")
-	if m_dev_ev > top_accuracy:
+	if m_dev_ev > top_m_accuracy:
 		top_m_accuracy = m_dev_ev
 		top_m_neighbor = neighbor
 
@@ -280,14 +282,14 @@ for penalty in grid_penalty:
 	perc1 = Perceptron(penalty=penalty, random_state = 0).fit(X_p_train, y_p_train_raveled)
 	p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
 	print("Accuracy of perceptron on packet size - dev: ", p_dev_eva, "%")
-	if p_dev_eva > top_accuracy:
+	if p_dev_eva > top_p_accuracy:
 		top_p_accuracy = p_dev_eva
 		top_p_penalty = penalty
 	# Perceptron on magnitude - dev
 	perc3 = Perceptron(penalty=penalty, random_state = 0).fit(X_m_train, y_m_train_raveled)
 	m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
 	print("Accuracy of perceptron on magnitude - dev: ", m_dev_eva, "%")
-	if m_dev_eva > top_accuracy:
+	if m_dev_eva > top_m_accuracy:
 		top_m_accuracy = m_dev_eva
 		top_m_penalty = penalty
 
@@ -313,14 +315,14 @@ for C in grid_C:
 	svm1 = SVC(gamma='auto', C=C).fit(X_p_train, y_p_train_raveled)
 	p_dev_e = accuracy_score(y_p_dev, svm1.predict(X_p_dev)) * 100
 	print("Accuracy of SVM on packet size - dev: ", p_dev_e, "%")
-	if p_dev_e > top_accuracy:
+	if p_dev_e > top_p_accuracy:
 		top_p_accuracy = p_dev_e
 		top_p_C = C
 	# SVM on magnitude - dev
 	svm3 = SVC(gamma='auto', C=C).fit(X_m_train, y_m_train_raveled)
 	m_dev_e = accuracy_score(y_m_dev, svm3.predict(X_m_dev)) * 100
 	print("Accuracy of SVM on magnitude - dev: ", m_dev_e, "%")
-	if m_dev_e > top_accuracy:
+	if m_dev_e > top_m_accuracy:
 		top_m_accuracy = m_dev_e
 		top_m_C = C
 
@@ -345,3 +347,6 @@ print(end - start)
 # 	acc_scores.append(cur_accuracy_score)
 
 # print('N-Fold Cross Validation Average Accuracy Score: ' + str(sum(acc_scores)/len(acc_scores)))
+end = time.time()
+print("Total time: " + str(end - start_start))
+
