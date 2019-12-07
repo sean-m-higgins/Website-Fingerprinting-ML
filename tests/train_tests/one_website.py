@@ -49,7 +49,7 @@ def not_website(input, num_rows, num_columns, diff):
                 given_website_magnitudes[row_index, column_index] = 0
                 gap -= 1
                 column_index += 1
-                prev_time += diff  #TODO change prev_time 
+                prev_time += diff  
                 if column_index >= num_columns:
                     break
             if column_index >= num_columns:
@@ -60,7 +60,7 @@ def not_website(input, num_rows, num_columns, diff):
                 given_website_magnitudes[row_index, column_index] = 1
             elif packet < 0:
                 given_website_magnitudes[row_index, column_index] = -1
-            prev_time += diff  #TODO 
+            prev_time += diff   
             count += 1
             column_index +=1
         row_index += 1
@@ -118,7 +118,7 @@ def not_website(input, num_rows, num_columns, diff):
                 all_other_magnitudes[i, column_index] = 0
                 gap -= 1
                 column_index += 1
-                prev_time += diff  #TODO change prev_time 
+                prev_time += diff  
                 if column_index >= num_columns:
                     break
             if column_index >= num_columns:
@@ -129,7 +129,7 @@ def not_website(input, num_rows, num_columns, diff):
                 all_other_magnitudes[i, column_index] = 1
             elif packet < 0:
                 all_other_magnitudes[i, column_index] = -1
-            prev_time += diff  #TODO 
+            prev_time += diff  
             count += 1
             column_index +=1
 
