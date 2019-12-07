@@ -148,12 +148,9 @@ for row in file:
     website_length += 1
 # print(website_length) -- 1011
 
-x_packet, x_magnitude, y_vals = not_website(website, int(website_length/2), 200, 0.1)
+x_packet, x_magnitude, y_vals = not_website(website, int(website_length), 400, 0.025)
 
 for row in x_packet:
-    print(row)
-
-for row in x_magnitude:
     print(row)
 
 # Standardize the features
