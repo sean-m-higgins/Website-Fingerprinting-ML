@@ -151,7 +151,7 @@ for row in file:
 
 start_start = time.time()
 
-x_packet, x_magnitude, y_vals = not_website(website, int(website_length/2), 200, 0.1)
+x_packet, x_magnitude, y_vals = not_website(website, int(website_length/2), 250, 0.075)
 
 # Standardize the features
 sc = StandardScaler()
