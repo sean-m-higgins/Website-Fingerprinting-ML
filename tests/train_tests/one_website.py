@@ -14,140 +14,125 @@ from sklearn.svm import SVC
 
 # Paramters for definition are as follows
 #   input = string to get to file directory (i.e. "data/result/facebook.com")
-#   l = number of rows youwant to look through, starting bias
-#   n = number of time differences you want to check
+#   num_rows = number of rows you want to look through, starting bias
+#   num_columns = number of time differences you want to check (number of columns)
 #   dif = the time difference needed to record that packet
-def not_website(input, l, n, diff):
-    f = open(input, "r")
-    arr_packet = np.zeros(shape = (l, n))
-    arr_magnitude = np.zeros(shape = (l, n))
-    counter = 0
-    for row in f:
+def not_website(input, num_rows, num_columns, diff):
+    file = open(input, "r")
+    given_website_packets = np.zeros(shape = (num_rows, num_columns))
+    given_website_magnitudes = np.zeros(shape = (num_rows, num_columns))
+    row_index = 0
+    for row in file:
         split = re.split(" ", str(row))
-        if counter >= l or len(split) < 2:
+        if row_index >= num_rows or len(split) < 2:
             break
         origin = re.split(":", str(split[2]))
         start_time = float(origin[0])
-        ten_sec_reached = True
-        count = 0
         prev_time = start_time
-        count_seconds = 0
-        while ten_sec_reached:
-            info = re.split(":", str(split[count+2]))
-            if len(info)<2:
+        count = 2
+        column_index = 0
+        while column_index <= num_columns:
+            time_and_packet = re.split(":", str(split[count]))
+            if len(time_and_packet) < 2:
                 break
-            time = float(info[0])
-            if (len(split) <= count + 3) or ((time - start_time) >= 10):
+            time = float(time_and_packet[0])
+            if (len(split) <= count+1) or ((time - start_time) >= 10):  #TODO
                 break
-            if time - prev_time < diff:
+            if time - prev_time < diff:  #TODO do we want to skip the first one?
                 count += 1
                 continue
             gap = (math.floor((time-prev_time) / diff)) - 1
             while gap > 0:
-                arr_packet[counter, count_seconds] = 0
-                arr_magnitude[counter, count_seconds] = 0
-                gap-=1
-                count_seconds+=1
-                prev_time += diff
-                if count_seconds >= n:
+                given_website_packets[row_index, column_index] = 0
+                given_website_magnitudes[row_index, column_index] = 0
+                gap -= 1  #TODO ??
+                column_index += 1
+                prev_time += diff  #TODO change prev_time 
+                if column_index >= num_columns:
                     break
-            if count_seconds >= n:
+            if column_index >= num_columns:
                 break
-            packet = float(info[1])
-            arr_packet[counter, count_seconds] = packet
+            packet = float(time_and_packet[1])
+            given_website_packets[row_index, column_index] = packet
             if packet > 0:
-                arr_magnitude[counter, count_seconds] = 1
+                given_website_magnitudes[row_index, column_index] = 1
             elif packet < 0:
-                arr_magnitude[counter, count_seconds] = -1
-            prev_time += diff
-            count_seconds +=1
-            if count_seconds >= n:
-                break
+                given_website_magnitudes[row_index, column_index] = -1
+            prev_time += diff  #TODO 
             count += 1
-        counter += 1
-    # return arr_packet, arr_magnitude
+            column_index +=1
+        row_index += 1
 
-    train_packet = np.zeros(shape = (l, n))
-    train_magnitude = np.zeros(shape = (l, n))
+    all_other_packets = np.zeros(shape = (num_rows, num_columns))
+    all_other_magnitudes = np.zeros(shape = (num_rows, num_columns))
     
     rootdir = Path('data/result/') 
     file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
+    # remove current website from possible files
     for i in range(67):
         if file_list[i] == website:
             file_list.remove(i)
     
-    for i in range(l):
+    for i in range(num_rows):
         random_site = randrange(66)
-        con = 0
-        fil = file_list[random_site - 1]
-        view_file = open(fil, "r")
+        new_file = file_list[random_site - 1]  #TODO why - 1?
+        view_file = open(new_file, "r")
+        new_file_length = 0
         for row in view_file.readlines():
-            con+=1
-        random_row = randrange(con)
+            new_file_length += 1
+        random_row = randrange(new_file_length)
+        view_file = open(new_file, "r")
         line = ""
-        cont = 0
-        view_file = open(fil, "r")
+        new_file_row_count = 0
         for row in view_file.readlines():
-            if cont == random_row:
+            if new_file_row_count == random_row:
                 line = row
-                # print(line)
                 break
-            cont+=1
+            new_file_row_count += 1
         split = re.split(" ", str(line))
         if len(split) < 2:
             break
         origin = re.split(":", str(split[2]))
         start_time = float(origin[0])
-        ten_sec_reached = True
-        count = 0
         prev_time = start_time
-        count_seconds = 0
-        while ten_sec_reached:
-            info = re.split(":", str(split[count+2]))
-            if len(info)<2:
+        count = 2
+        column_index = 0
+        while column_index <= num_columns:
+            time_and_packet = re.split(":", str(split[count]))
+            if len(time_and_packet) < 2:
                 break
-            time = float(info[0])
-            if (len(split) <= count + 3) or ((time - start_time) >= 10):
+            time = float(time_and_packet[0])
+            if (len(split) <= count+1) or ((time - start_time) >= 10):  #TODO
                 break
-            if time - prev_time < diff:
+            if time - prev_time < diff:  #TODO do we want to skip the first one?
                 count += 1
                 continue
             gap = (math.floor((time-prev_time) / diff)) - 1
             while gap > 0:
-                train_packet[i, count_seconds] = 0
-                train_magnitude[i, count_seconds] = 0
-                gap-=1
-                count_seconds+=1
-                prev_time += diff
-                if count_seconds >= n:
+                all_other_packets[i, column_index] = 0
+                all_other_magnitudes[i, column_index] = 0
+                gap -= 1  #TODO ??
+                column_index += 1
+                prev_time += diff  #TODO change prev_time 
+                if column_index >= num_columns:
                     break
-            if count_seconds >= n:
+            if column_index >= num_columns:
                 break
-            packet = float(info[1])
-            train_packet[i, count_seconds] = packet
+            packet = float(time_and_packet[1])
+            all_other_packets[i, column_index] = packet
             if packet > 0:
-                train_magnitude[i, count_seconds] = 1
+                all_other_magnitudes[i, column_index] = 1
             elif packet < 0:
-                train_magnitude[i, count_seconds] = -1
-            prev_time += diff
-            count_seconds +=1
-            if count_seconds >= n:
-                break
+                all_other_magnitudes[i, column_index] = -1
+            prev_time += diff  #TODO 
             count += 1
-    # return train_packet, train_magnitude
+            column_index +=1
 
-    y = np.zeros(shape=((l*2), 1))
-    for i in range((l*2)):
-        if i < l:
-            y[i, 0] = 1
-        elif i>=l and i<(l*2):
-            y[i, 0] = 0
+    y = np.concatenate((np.zeros(shape=((num_rows), 1)), np.ones(shape=((num_rows), 1))))
 
-    x_p = np.concatenate((arr_packet, train_packet), axis=0)
-    x_m = np.concatenate((arr_magnitude, train_magnitude), axis=0)
-    # ds_packet = np.concatenate((y, x_p), axis=1)
-    # ds_magnitude = np.concatenate((y, x_m), axis=1)
+    x_p = np.concatenate((given_website_packets, all_other_packets))
+    x_m = np.concatenate((given_website_magnitudes, all_other_magnitudes))
 
     return x_p, x_m, y
 
@@ -156,8 +141,14 @@ website = "data/result/facebook.com"
 
 x_packet, x_magnitude, y_vals = not_website(website, 50, 200, 0.1)
 
-print(x_packet)
-print(x_magnitude)
+# for row in x_packet:
+#     print(row)
+
+# for row in x_magnitude:
+#     print(row)
+
+# print(x_packet)
+# print(x_magnitude)
 
 # Standardize the features
 sc = StandardScaler()
