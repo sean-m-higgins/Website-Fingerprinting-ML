@@ -22,6 +22,7 @@ def not_website(input, num_rows, num_columns, diff):
     given_website_packets = np.zeros(shape = (num_rows, num_columns))
     given_website_magnitudes = np.zeros(shape = (num_rows, num_columns))
     row_index = 0
+    # go through each row in file or until num_rows threshold
     for row in file:
         split = re.split(" ", str(row))
         if row_index >= num_rows or len(split) < 2:
@@ -31,12 +32,13 @@ def not_website(input, num_rows, num_columns, diff):
         prev_time = start_time
         count = 2
         column_index = 0
+        # get each item in the current row and check the time difference to determine if adding to the array
         while column_index <= num_columns:
             time_and_packet = re.split(":", str(split[count]))
             if len(time_and_packet) < 2:
                 break
             time = float(time_and_packet[0])
-            if (len(split) <= count+1) or ((time - start_time) >= 10):  #TODO
+            if (len(split) <= count+1) or ((time - start_time) >= 10):
                 break
             if time - prev_time < diff:  #TODO do we want to skip the first one?
                 count += 1
@@ -45,7 +47,7 @@ def not_website(input, num_rows, num_columns, diff):
             while gap > 0:
                 given_website_packets[row_index, column_index] = 0
                 given_website_magnitudes[row_index, column_index] = 0
-                gap -= 1  #TODO ??
+                gap -= 1
                 column_index += 1
                 prev_time += diff  #TODO change prev_time 
                 if column_index >= num_columns:
@@ -74,6 +76,7 @@ def not_website(input, num_rows, num_columns, diff):
         if file_list[i] == website:
             file_list.remove(i)
     
+    # go through and get a random row in a random file until num_rows threshold
     for i in range(num_rows):
         random_site = randrange(66)
         new_file = file_list[random_site - 1]  #TODO why - 1?
@@ -98,12 +101,13 @@ def not_website(input, num_rows, num_columns, diff):
         prev_time = start_time
         count = 2
         column_index = 0
+        # get each item in the current row and check the time difference to determine if adding to the array
         while column_index <= num_columns:
             time_and_packet = re.split(":", str(split[count]))
             if len(time_and_packet) < 2:
                 break
             time = float(time_and_packet[0])
-            if (len(split) <= count+1) or ((time - start_time) >= 10):  #TODO
+            if (len(split) <= count+1) or ((time - start_time) >= 10):  
                 break
             if time - prev_time < diff:  #TODO do we want to skip the first one?
                 count += 1
@@ -112,7 +116,7 @@ def not_website(input, num_rows, num_columns, diff):
             while gap > 0:
                 all_other_packets[i, column_index] = 0
                 all_other_magnitudes[i, column_index] = 0
-                gap -= 1  #TODO ??
+                gap -= 1
                 column_index += 1
                 prev_time += diff  #TODO change prev_time 
                 if column_index >= num_columns:
@@ -163,98 +167,96 @@ X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(x_magnitude, y_vals,
 X_p_dev, X_p_test, y_p_dev, y_p_test = train_test_split(X_p_test, y_p_test, test_size=0.5, random_state=0)
 X_m_dev, X_m_test, y_m_dev, y_m_test = train_test_split(X_m_test, y_m_test, test_size=0.5, random_state=0)
 
-y_m_train_raveled = y_m_train.ravel()
-y_p_train_raveled = y_p_train.ravel()
+y_m_train = y_m_train.ravel()
+y_p_train = y_p_train.ravel()
 
+#-----------------------------------------------------------------------
 #Logistic Regression on packet size - dev
-clf = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train_raveled)
+clf = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train)
 p_dev_eval = accuracy_score(y_p_dev, clf.predict(X_p_dev)) * 100
 print("Accuracy of log reg on packet size - dev: ", p_dev_eval, "%")
 
 #Logistic Regression on packet size - test
-clf1 = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train_raveled)
+clf1 = LogisticRegression(random_state=0, solver='liblinear').fit(X_p_train, y_p_train)
 p_test_eval = accuracy_score(y_p_test, clf1.predict(X_p_test)) * 100
 print("Accuracy of log reg on packet size - test: ", p_test_eval, "%")
 
 #Logistic Regression on magnitude - dev
-clf2 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train_raveled)
+clf2 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train)
 m_dev_eval = accuracy_score(y_m_dev, clf2.predict(X_m_dev)) * 100
 print("Accuracy of log reg on magnitude - dev: ", m_dev_eval, "%")
 
 #Logistic Regression on magnitude - test
-clf3 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train_raveled)
+clf3 = LogisticRegression(random_state=0, solver='liblinear').fit(X_m_train, y_m_train)
 m_dev_test = accuracy_score(y_m_test, clf3.predict(X_m_test)) * 100
 print("Accuracy of log reg on magnitude - test: ", m_dev_test, "%")
 
 print("")
 
-# Now we should do a KNN test, TODO check over if possible
-
+#-----------------------------------------------------------------------
 # KNN of 5 on packet_size - dev
-neigh1 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train_raveled)
+neigh1 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train)
 p_dev_ev = accuracy_score(y_p_dev, neigh1.predict(X_p_dev)) * 100
 print("Accuracy of k nearest neighbors on packet size - dev: ", p_dev_ev, "%")
 
 # KNN of 5 on packet_size - test
-neigh2 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train_raveled)
+neigh2 = KNeighborsClassifier(n_neighbors=5).fit(X_p_train, y_p_train)
 p_test_ev = accuracy_score(y_p_test, neigh2.predict(X_p_test)) * 100
 print("Accuracy of k nearest neighbors on packet size - test: ", p_test_ev, "%")
 
 # KNN of 5 on magnitude - dev
-neigh3 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train_raveled)
+neigh3 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train)
 m_dev_ev = accuracy_score(y_m_dev, neigh3.predict(X_m_dev)) * 100
 print("Accuracy of k nearest neighbors on magnitude - dev: ", m_dev_ev, "%")
 
 # KNN of 5 on magnitude - test
-neigh4 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train_raveled)
+neigh4 = KNeighborsClassifier(n_neighbors=5).fit(X_m_train, y_m_train)
 m_test_ev = accuracy_score(y_m_test, neigh4.predict(X_m_test)) * 100
 print("Accuracy of k nearest neighbors on magnitude - test: ", m_test_ev, "%")
 
 print("")
 
-# Should try perceptron
-
+#-----------------------------------------------------------------------
 # Perceptron on packet_size - dev
-perc1 = Perceptron(random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc1 = Perceptron(random_state = 0).fit(X_p_train, y_p_train)
 p_dev_eva = accuracy_score(y_p_dev, perc1.predict(X_p_dev)) * 100
 print("Accuracy of perceptron on packet size - dev: ", p_dev_eva, "%")
 
 # Perceptron on packet_size - test
-perc2 = Perceptron(random_state = 0).fit(X_p_train, y_p_train_raveled)
+perc2 = Perceptron(random_state = 0).fit(X_p_train, y_p_train)
 p_test_eva = accuracy_score(y_p_test, perc2.predict(X_p_test)) * 100
 print("Accuracy of perceptron on packet size - test: ", p_test_eva, "%")
 
 # Perceptron on magnitude - dev
-perc3 = Perceptron(random_state = 0).fit(X_m_train, y_m_train_raveled)
+perc3 = Perceptron(random_state = 0).fit(X_m_train, y_m_train)
 m_dev_eva = accuracy_score(y_m_dev, perc3.predict(X_m_dev)) * 100
 print("Accuracy of perceptron on magnitude - dev: ", m_dev_eva, "%")
 
 # Perceptron on magnitude - test
-perc4 = Perceptron(random_state = 0).fit(X_m_train, y_m_train_raveled)
+perc4 = Perceptron(random_state = 0).fit(X_m_train, y_m_train)
 m_test_eva = accuracy_score(y_m_test, perc4.predict(X_m_test)) * 100
 print("Accuracy of perceptron on magnitude - test: ", m_test_eva, "%")
 
 print("")
 
-# Try SVM
-
+#-----------------------------------------------------------------------
 # SVM on packet_size - dev
-svm1 = SVC(gamma='auto').fit(X_p_train, y_p_train_raveled)
+svm1 = SVC(gamma='auto').fit(X_p_train, y_p_train)
 p_dev_e = accuracy_score(y_p_dev, svm1.predict(X_p_dev)) * 100
 print("Accuracy of SVM on packet size - dev: ", p_dev_e, "%")
 
 # SVM on packet_size - test
-svm2 = SVC(gamma='auto').fit(X_p_train, y_p_train_raveled)
+svm2 = SVC(gamma='auto').fit(X_p_train, y_p_train)
 p_test_e = accuracy_score(y_p_test, svm2.predict(X_p_test)) * 100
 print("Accuracy of SVM on packet size - test: ", p_test_e, "%")
 
 # SVM on magnitude - dev
-svm3 = SVC(gamma='auto').fit(X_m_train, y_m_train_raveled)
+svm3 = SVC(gamma='auto').fit(X_m_train, y_m_train)
 m_dev_e = accuracy_score(y_m_dev, svm3.predict(X_m_dev)) * 100
 print("Accuracy of SVM on magnitude - dev: ", m_dev_e, "%")
 
 # SVM on magnitude - test
-svm4 = SVC(gamma='auto').fit(X_m_train, y_m_train_raveled)
+svm4 = SVC(gamma='auto').fit(X_m_train, y_m_train)
 m_test_e = accuracy_score(y_m_test, svm4.predict(X_m_test)) * 100
 print("Accuracy of SVM on magnitude - test: ", m_test_e, "%")
 
