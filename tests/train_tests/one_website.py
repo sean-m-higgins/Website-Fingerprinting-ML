@@ -40,7 +40,7 @@ def not_website(input, num_rows, num_columns, diff):
             time = float(time_and_packet[0])
             if (len(split) <= count+1) or ((time - start_time) >= 10):
                 break
-            if time - prev_time < diff:  #TODO do we want to skip the first one?
+            if time - prev_time < diff:
                 count += 1
                 continue
             gap = (math.floor((time-prev_time) / diff)) - 1
@@ -79,7 +79,7 @@ def not_website(input, num_rows, num_columns, diff):
     # go through and get a random row in a random file until num_rows threshold
     for i in range(num_rows):
         random_site = randrange(66)
-        new_file = file_list[random_site - 1]  #TODO why - 1?
+        new_file = file_list[random_site - 1]
         view_file = open(new_file, "r")
         new_file_length = 0
         for row in view_file.readlines():
@@ -109,7 +109,7 @@ def not_website(input, num_rows, num_columns, diff):
             time = float(time_and_packet[0])
             if (len(split) <= count+1) or ((time - start_time) >= 10):  
                 break
-            if time - prev_time < diff:  #TODO do we want to skip the first one?
+            if time - prev_time < diff:
                 count += 1
                 continue
             gap = (math.floor((time-prev_time) / diff)) - 1
