@@ -142,6 +142,26 @@ def not_website(input, num_rows, num_columns, diff):
     return x_p, x_m, y
 
 
+def val_split(train, y, i, n):
+	t_n = len(train)
+	new_arr = np.asarray(train)
+	new_y = np.asarray(y)
+	if i == 1:
+		low_index = 0
+		high_index = int(t_n / n)
+	elif i == n:
+		low_index = int(((i-1)/n)*t_n)
+		high_index = t_n
+	else:
+		low_index = int(((i-1)/n)*t_n)
+		high_index = int((i/n)*t_n)
+	X_train = np.concatenate((new_arr[:low_index],new_arr[high_index:]))
+	X_test = new_arr[low_index:high_index]
+	y_train = np.concatenate((new_y[:low_index],new_y[high_index:]))
+	y_test = new_y[low_index:high_index]
+	return X_train, X_test, y_train, y_test
+
+
 website = "data/result/facebook.com"
 file = open(website, "r")
 website_length = 0
@@ -310,18 +330,31 @@ print(end - start)
 #-----------------------------------------------------------------------
 # N-FOLD CROSS VALIDATION:
 
-# n = 3
-# acc_scores = []
+n = 3
+acc_scores = []
 
-# for i in range(n):
-# 	X_train_val, X_test_val, y_train_val, y_test_val = split(X_p_train, y_p_train, i+1, n)
-# 	svc = svm.SVC(kernel='linear', C=1.0).fit(X_train_val, y_train_val)
-# 	predictions = svc.predict(X_test_val)
-# 	cur_accuracy_score = accuracy_score(y_test_val, predictions)
-# 	print("Accuracy Score " + str(i) + ": " + str(cur_accuracy_score))
-# 	acc_scores.append(cur_accuracy_score)
+for i in range(n):
+	X_train_val, X_test_val, y_train_val, y_test_val = val_split(X_p_train, y_p_train, i+1, n)
+	svc = SVC(kernel='linear', C=1.0).fit(X_train_val, y_train_val)
+	predictions = svc.predict(X_test_val)
+	cur_accuracy_score = accuracy_score(y_test_val, predictions)
+	print("Accuracy Score " + str(i) + ": " + str(cur_accuracy_score))
+	acc_scores.append(cur_accuracy_score)
 
-# print('N-Fold Cross Validation Average Accuracy Score: ' + str(sum(acc_scores)/len(acc_scores)))
+print('N-Fold Cross Validation Average Accuracy Score Packet: ' + str(sum(acc_scores)/len(acc_scores)))
+
+acc_scores = []
+
+for i in range(n):
+	X_train_val, X_test_val, y_train_val, y_test_val = val_split(X_m_train, y_m_train, i+1, n)
+	svc = SVC(kernel='linear', C=1.0).fit(X_train_val, y_train_val)
+	predictions = svc.predict(X_test_val)
+	cur_accuracy_score = accuracy_score(y_test_val, predictions)
+	print("Accuracy Score " + str(i) + ": " + str(cur_accuracy_score))
+	acc_scores.append(cur_accuracy_score)
+
+print('N-Fold Cross Validation Average Accuracy Score Magnitude: ' + str(sum(acc_scores)/len(acc_scores)))
+
+
 end = time.time()
 print("Total time: " + str(end - start_start))
-
