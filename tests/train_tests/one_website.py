@@ -150,8 +150,7 @@ for row in file:
 
 x_packet, x_magnitude, y_vals = not_website(website, int(website_length/2), 250, 0.075)
 
-for row in x_packet:
-    print(row)
+x_new = np.add(x_packet, x_magnitude)
 
 # Standardize the features
 sc = StandardScaler()
