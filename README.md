@@ -4,7 +4,7 @@ Machine Learning implementation of website fingerprinting
 
 ## Presentation
 Here is the link to the Google Slides presentation that we should work on: 
-https://drive.google.com/open?id=1yGbqBSM7N9cy_UUAFvOsbbCi7Jp4Wk4sngm8Xq8vJkE
+https://drive.google.com/open?id=1pxz7Kvbpuaelb9YEzScSO-jgmxrCrpUQNUimHi81ZUA
 
 Here is the link to the report writeup:
 https://drive.google.com/open?id=1Fm9KKjPYUfn_Wp3JDzNgnVpSWlm66vtX0eTfv3yMLNY
