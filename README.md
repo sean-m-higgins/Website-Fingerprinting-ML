@@ -1,15 +1,14 @@
 # Website-Fingerprinting-ML
 Machine Learning implementation of website fingerprinting
 
+This is a project we worked on for our Machine Learning course.
+The project attempted to distinguish websites only by viewing timestamp vs. packetsize data.
+Since this has been successful, but never tested on data where websites overlap.
 
-## Presentation
-Here is the link to the Google Slides presentation that we should work on: 
-https://drive.google.com/open?id=1pxz7Kvbpuaelb9YEzScSO-jgmxrCrpUQNUimHi81ZUA
+We took a different approach then the paper presented at: https://www.researchgate.net/publication/306097739_Website_Fingerprinting_at_Internet_Scale. 
+This was an attempt to see if another approach may work better.
 
-Here is the link to the report writeup:
-https://drive.google.com/open?id=1Fm9KKjPYUfn_Wp3JDzNgnVpSWlm66vtX0eTfv3yMLNY
-
-If you want access to edit, request it. Otherwise email me the email you want edit access on.
+It did not provide promising results, but is an ongoing project.
 
 
 ## Setting up datasets
@@ -21,10 +20,3 @@ Make sure to expand the datasets into the data folder so that you see three fold
 - result
 
 These all will be ignored for a git push in case we want to leave guidelines for any specific things to do within that folder
-
-
-## Python files
-We probably want to create multiple python files in the beginning so that we can test our results
-
-I have done this so far by creting *clean.py* which is going to be creating a numpy array of our data
-
