@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import numpy as np
 
-rootdir = Path('data/result/') # change here to get the info for your dataset
+rootdir = Path('data/20s_website1/') # change here to get the info for your dataset
 file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 # print(len(file_list))
 
